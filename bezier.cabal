@@ -6,12 +6,12 @@ cabal-version: 1.12
 
 name:           bezier
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/bezier#readme>
-homepage:       https://github.com/githubuser/bezier#readme
-bug-reports:    https://github.com/githubuser/bezier/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2021 Author name here
+description:    Please see the README on GitHub at <https://github.com/StefanGroth/bezier#readme>
+homepage:       https://github.com/StefanGroth/bezier#readme
+bug-reports:    https://github.com/StefanGroth/bezier/issues
+author:         Stefan Groth
+maintainer:     stefan.groth@outlook.com
+copyright:      2021 Stefan Groth
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -21,7 +21,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/bezier
+  location: https://github.com/StefanGroth/bezier
 
 library
   exposed-modules:
@@ -32,6 +32,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , gloss
   default-language: Haskell2010
 
 executable bezier-exe
@@ -44,6 +45,7 @@ executable bezier-exe
   build-depends:
       base >=4.7 && <5
     , bezier
+    , gloss
   default-language: Haskell2010
 
 test-suite bezier-test
@@ -57,4 +59,5 @@ test-suite bezier-test
   build-depends:
       base >=4.7 && <5
     , bezier
+    , gloss
   default-language: Haskell2010
