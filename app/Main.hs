@@ -29,16 +29,16 @@ data Points = Points
 
 render :: Points -> Picture
 render points =
-    pictures $ map mkCircle locations ++ showAnim 10 bezierPoint ++ [color red $ line $ bezierPoints locations samplePoints] 
+    pictures $ map mkCircle locations ++ showAnim 10 locations bezierPoint ++ [color red $ line $ bezierPoints locations samplePoints] 
     where        
         mkCircle :: Point -> Picture
         mkCircle (x, y) = translate x y $ color white $ circleSolid 10
         
-        bezierPoint = bezier locations (t points)  
+        bezierPoint = explicitBezier locations (t points)  
 
-        showAnim :: Float -> Maybe Point -> [Picture] 
-        showAnim size Nothing = []
-        showAnim size (Just (x, y)) = [translate x y $ color red $ circleSolid size]
+        showAnim :: Float -> [Point] -> Point -> [Picture] 
+        showAnim _ [] _ = []
+        showAnim size _ (x, y) = [translate x y $ color red $ circleSolid size]
 
         locations = locs points
         
