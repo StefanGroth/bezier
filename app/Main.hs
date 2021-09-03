@@ -50,7 +50,7 @@ render points =
 
         bezierPoints :: [Point] -> [Float] -> [Point]
         bezierPoints [] _ = []
-        bezierPoints locs ts = bezier' locs <$> ts
+        bezierPoints locs ts = explicitBezier locs <$> ts
 
 initialState :: Points
 initialState = Points { 
