@@ -25,13 +25,14 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      Bezier
   other-modules:
       Paths_bezier
   hs-source-dirs:
       src
   build-depends:
       base >=4.7 && <5
+    , exact-combinatorics
     , gloss
   default-language: Haskell2010
 
@@ -45,6 +46,7 @@ executable bezier-exe
   build-depends:
       base >=4.7 && <5
     , bezier
+    , exact-combinatorics
     , gloss
   default-language: Haskell2010
 
@@ -59,5 +61,6 @@ test-suite bezier-test
   build-depends:
       base >=4.7 && <5
     , bezier
+    , exact-combinatorics
     , gloss
   default-language: Haskell2010

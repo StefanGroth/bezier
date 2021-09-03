@@ -1,10 +1,11 @@
-import Lib
+
 import Graphics.Gloss
 import Graphics.Gloss.Data.ViewPort
 import Graphics.Gloss.Interface.Pure.Game
 
-import qualified Graphics.Gloss.Data.Point.Arithmetic as Arith
-import Control.Applicative
+import Bezier
+
+import Data.Fixed
 
 width :: Int
 width = 300
@@ -23,47 +24,54 @@ background = black
 data Points = Points 
     {
         locs :: [Point],
-        anim :: Maybe Point 
+        t :: Float  
     } deriving Show
 
 render :: Points -> Picture
 render points =
-    pictures $ map mkCircle (locs points) ++ showAnim (anim points)
+    pictures $ map mkCircle locations ++ showAnim 10 bezierPoint ++ [color red $ line $ bezierPoints locations samplePoints] 
     where        
         mkCircle :: Point -> Picture
-        mkCircle (x, y) = translate x y $ color white $ pictures [circleSolid 10, mkText x y]
-        mkText x y = translate 15 (-5) $ scale 0.15 0.15 $ Text ("(" ++ show x ++ ", " ++ show y ++ ")")
+        mkCircle (x, y) = translate x y $ color white $ circleSolid 10
         
-        showAnim :: Maybe Point -> [Picture] 
-        showAnim Nothing = []
-        showAnim (Just (x, y)) = [translate x y $ color red $ circleSolid 10]
+        bezierPoint = bezier locations (t points)  
+
+        showAnim :: Float -> Maybe Point -> [Picture] 
+        showAnim size Nothing = []
+        showAnim size (Just (x, y)) = [translate x y $ color red $ circleSolid size]
+
+        locations = locs points
+        
+        samples :: Int
+        samples = 50
+        
+        samplePoints :: [Float]
+        samplePoints = [0, 1.0/fromIntegral samples .. 1.0]
+
+        bezierPoints :: [Point] -> [Float] -> [Point]
+        bezierPoints [] _ = []
+        bezierPoints locs ts = bezier' locs <$> ts
 
 initialState :: Points
 initialState = Points { 
     locs = [],
-    anim = Nothing 
+    t = 0
 }
-
-
-bezier :: [Point] -> Float -> Maybe Point 
-bezier [] _ = Nothing 
-bezier [point] _ = Just point 
-bezier points t = (Arith.+) <$> first <*> last
-    where   first = ((1-t) Arith.*) <$> bezier (init points) t
-            last = (t Arith.*) <$> bezier (tail points) t
 
 fps :: Int
 fps = 60
 
 handleKeys :: Event -> Points -> Points
 handleKeys (EventKey (MouseButton LeftButton) Down _ (x, y)) points =
-    points { locs = (x,y) : locs points, anim = Just (x, y) }
+    points { locs = locs points ++ [(x,y)] }
 handleKeys _ game = game
 
 
-
+duration :: Float
+duration = 5
 
 main :: IO ()
 main = play window background fps initialState render handleKeys update 
     where 
-        update _ points = points
+        update :: Float -> Points -> Points
+        update secs points = points { t = mod' (t points + (secs / duration)) 1 }
