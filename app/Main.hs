@@ -27,7 +27,8 @@ render points =
     pictures $ map mkCircle $ locs points
     where        
         mkCircle :: Point -> Picture
-        mkCircle (x, y) = translate x y $ color white $ circleSolid 10
+        mkCircle (x, y) = translate x y $ color white $ pictures [circleSolid 10, mkText x y]
+        mkText x y = translate 15 (-5) $ scale 0.15 0.15 $ Text ("(" ++ show x ++ ", " ++ show y ++ ")")
 
 
 initialState :: Points
